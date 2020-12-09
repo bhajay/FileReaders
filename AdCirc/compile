@@ -1,2 +1,2 @@
-g++ -I/include/Eigen WindApp.cpp
-./a.out
+g++ -I/include/Eigen AdCirc_op.cpp
+./a.out 62 fort.62
