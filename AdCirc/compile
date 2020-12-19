@@ -1,2 +1,2 @@
 g++ -I/include/Eigen AdCirc_op.cpp
-./a.out 62 fort.62
+./a.out 64 fort.64 opfile

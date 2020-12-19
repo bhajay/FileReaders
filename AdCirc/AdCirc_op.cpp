@@ -43,7 +43,8 @@
 //*********************************************************************************
 // Declare functions
 //*********************************************************************************
-Eigen::MatrixXd adcirc_62(std::string fname,Eigen::MatrixXd data,int nrows,int tsteps);
+int getfiletype(int num);
+Eigen::MatrixXd adcirc_tp01(std::string fname,Eigen::MatrixXd data,int nrows,int tsteps);
 bool printmatrix(std::string fname, Eigen::MatrixXd mat);
 
 //*********************************************************************************
@@ -56,7 +57,7 @@ int main(int argc, char *argv[])
     std::cout << "Parsing started" << std::endl;
     
     // Checking for the number of arguments and file existence
-    if(argc<3) 
+    if(argc<4) 
     {
         // Not enough input arguments available
         std::cout << "Error: File type and/or file names not provided" << std::endl;
@@ -65,15 +66,18 @@ int main(int argc, char *argv[])
     else
     {
         // Print out the input arguments
-        std::cout << "File type: " << argv[1] << "\nFile name: " << argv[2] << std::endl;
+        std::cout << "File type: " << argv[1] << "\nFile name: " << argv[2] << "\nO/p file name: " << argv[3] << std::endl;
 
         // Check if file exists. Else return error
         std::ifstream is(argv[2]);
         if (is.fail()) return 1;
     }
 
+    // Get file type
+    int filetype = getfiletype(atoi(argv[1]));
+
     // Call the appropriate file reader
-    if(atoi(argv[1]) == 62)
+    if(filetype == 1)
     {
         // Initialize data
         std::string line;
@@ -91,7 +95,7 @@ int main(int argc, char *argv[])
         Eigen::MatrixXd data = Eigen::MatrixXd::Zero(nrows+1,2*tsteps);
 
         // Get the parsed data
-        data = adcirc_62(argv[2],data,nrows,tsteps);
+        data = adcirc_tp01(argv[2],data,nrows,tsteps);
     }
 
     std::cout << "Parsing complete" << std::endl;    
@@ -102,9 +106,27 @@ int main(int argc, char *argv[])
 //*********************************************************************************
 
 //*********************************************************************************
-// Filetype: 62
+// Get file type
 //*********************************************************************************
-Eigen::MatrixXd adcirc_62(std::string fname,Eigen::MatrixXd data,int nrows,int tsteps)
+int getfiletype(int num)
+{
+    int type;
+    if(num == 62)
+    {
+        return 1;
+    }
+    else if (num == 64)
+    {
+        return 1;
+    }
+
+    return 0;    
+}
+
+//*********************************************************************************
+// Filetype: 62 / 64
+//*********************************************************************************
+Eigen::MatrixXd adcirc_tp01(std::string fname,Eigen::MatrixXd data,int nrows,int tsteps)
 {
     // Create a file stream
     std::ifstream adCFile(fname);
@@ -141,6 +163,8 @@ Eigen::MatrixXd adcirc_62(std::string fname,Eigen::MatrixXd data,int nrows,int t
     // Return
     return data;
 }
+
+
 
 //*********************************************************************************
 // Print Eigen matrix
